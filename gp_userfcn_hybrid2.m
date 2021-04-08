@@ -71,7 +71,9 @@ function gp = gp_userfcn_hybrid2(gp)
 
 %% initial equations
 C = gp.pop;
+
 string2Beval = string(C); %string to be evaluated
+
 pat = 'x(\d+)';
 string2Beval = regexprep(string2Beval,pat,'x(:,$1)'); %$1 makes x1 and x2 things, multiple x variables
 
@@ -103,7 +105,7 @@ if gp.state.count > 1
         idx_chosen = randi([1 gp.runcontrol.pop_size], 1, floor(gp.selection.elite_fraction*gp.runcontrol.pop_size));
         % how to not include pop with nan fitness?
         idx_chosen = idx_chosen(~isnan( fitness(idx_chosen) ));
-    elseif gp.state.count
+    else
         %indices of elite population only
         [~, idx_chosen] = mink(fitness, floor( (gp.selection.elite_fraction) *gp.runcontrol.pop_size));
         idx_chosen = idx_chosen';
@@ -113,7 +115,9 @@ else
     [~, idx_chosen] = mink(fitness, floor( (gp.selection.elite_fraction) *gp.runcontrol.pop_size));
     idx_chosen = idx_chosen';
 end
-idx_chosen = sort(idx_chosen);
+[~, ia, ~] = unique(string2Beval(idx_chosen));
+idx_chosen = sort(idx_chosen(ia));
+%idx_chosen = sort(idx_chosen);
 
 %%
 %run through all the possible equations to find the ones with constants
@@ -251,3 +255,4 @@ gp.improv(gp.state.count)
 %% notes for presentation
 % tree depth reduction helps speed up runs but decrease in fitness is
 % lower though, between generations
+%check for duplicate equations?
