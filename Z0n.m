@@ -43,6 +43,6 @@
        t=zeros(1,2^in);
        t(val)=1;
        t(1)=1;
-       out=multicomplex(t);   
+       out=multi(t);   
 
       end

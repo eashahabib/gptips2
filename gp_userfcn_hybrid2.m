@@ -1,4 +1,5 @@
 function gp = gp_userfcn_hybrid2(gp)
+%% NEWTON'S METHOD
 %GP_USERFCN Calls a user defined function once per generation if one has been 
 %specified in the field GP.USERDATA.USER_FCN.
 % 
@@ -99,8 +100,9 @@ for i=1:num2improv
     z(i) = multi(z_temp);
 end
 
+%% indices to be improved
 if gp.state.count > 1
-    if gp.improv(gp.state.count-1)==0
+    if gp.improv(gp.state.count-1)<0.1
         % random indices,
         idx_chosen = randi([1 gp.runcontrol.pop_size], 1, floor(gp.selection.elite_fraction*gp.runcontrol.pop_size));
         % how to not include pop with nan fitness?
@@ -223,7 +225,7 @@ end
 
 idx_new = idx_new(2:end);
 
-fitness = gp.fitness.values;
+fitness_new = fitness;
 for i = idx_new %1:gp2.runcontrol.pop_size
     
         %preprocess cell array of string expressions into a form that
@@ -231,14 +233,14 @@ for i = idx_new %1:gp2.runcontrol.pop_size
         evalstr = tree2evalstr(C{i},gp);
         
         
-        [fitness(i),gp] = feval(gp.fitness.fitfun,evalstr,gp);
+        [fitness_new(i),gp] = feval(gp.fitness.fitfun,evalstr,gp);
         %gp2.fitness.values(i) = fitness;
         
 end
 
 %sum(gp2.fitness.values < gp.fitness.values)
 
-temp_comparison = fitness < gp.fitness.values;
+temp_comparison = fitness_new < fitness;
 gp.pop(temp_comparison) = C(temp_comparison);
 gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 

@@ -1,19 +1,20 @@
 %clc; clear; 
+clc;
 close all;
 % 
 % %gp = rungp(@spatial_evol_config);
 % figure;
-for i=1:2
-    i
-    %gp = rungp(@gpdemo1_config)
-    eval(['gp = gp_newton' num2str(i) ';']);
+for i=1:1
+    b = 'bees'
+    gp = rungp(@gpdemo1_config);
+    eval(['gp_newton' num2str(i) '= gp;']);
     A = gp.results.history;
     B = gp.state;
 %     plot(1:length(gp.results.history.bestfitness(1:end)), gp.results.history.bestfitness(1:end)', 'LineWidth', 1.5); hold on;
 %      myStats2.bestfitness(1:length(A.bestfitness),i) = A.bestfitness(1:end);
-     myStats2.FITiters(i) = length(A.bestfitness);
-     myStats2.FITtime(i) = B.runTimeElapsed;
-     myStats2.FITfitness(i) = gp.results.best.fitness;
+     myStats.FITiters(i) = length(A.bestfitness);
+     myStats.FITtime(i) = B.runTimeElapsed;
+     myStats.FITfitness(i) = gp.results.best.fitness;
      
 %     
 %     myStats_pre.FITiters(i) = length(A.bestfitness);

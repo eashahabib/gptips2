@@ -199,8 +199,8 @@ end
 %represent sqrt(-1).
 charnum = 96; skip = 0;
 for i=1:gp.nodes.functions.num_active
-    while true      %e                          %i                    %j                         %x
-        if (charnum+i+skip)==101 || (charnum+i+skip)==105 || (charnum+i+skip)==106 || (charnum+i+skip)==120
+    while true      %e                          %i                    %j                         %x  % adding m u l t
+        if (charnum+i+skip)==101 || (charnum+i+skip)==105 || (charnum+i+skip)==106 || (charnum+i+skip)==120 || (charnum+i+skip)==109 || (charnum+i+skip)==117 || (charnum+i+skip)==108 || (charnum+i+skip)==116 
             skip = skip + 1;
         else
             break

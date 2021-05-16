@@ -1,4 +1,5 @@
 function gp = gp_userfcn(gp)
+%% GRADIENT DESCENT METHOD
 %GP_USERFCN Calls a user defined function once per generation if one has been 
 %specified in the field GP.USERDATA.USER_FCN.
 % 
@@ -65,12 +66,6 @@ function gp = gp_userfcn(gp)
 %         %return;
 %     
 %  
-if gp.state.count>4
-    if all(gp.improv(gp.state.count-3:gp.state.count-1)==0)
-        gp.improv(gp.state.count)=0;
-       return 
-    end
-end
 
 
 C = gp.pop;
@@ -92,13 +87,36 @@ n = length(y1);
 
 idx_new=[0];
 
-%indices of elite population only 
-[~, idx_minFit] = mink(fitness, floor( (gp.selection.elite_fraction) *gp.runcontrol.pop_size));
-idx_minFit = sort(idx_minFit);
-%note "mink" ignores nan values
+%% array of multicomplex numbers upto i7
+num2improv = 6;
+for i=1:num2improv
+    z_temp = zeros(1,2^i);
+    z_temp(2^(i-1)+1) = h;
+    z(i) = multi(z_temp);
+end
 
-%run through all the possible equations to find the ones with constants
-for j= idx_minFit' %1:length(string2Beval) 
+%% indices of elite population only 
+if gp.state.count > 1
+    if gp.improv(gp.state.count-1)<0.1
+        % random indices,
+        idx_chosen = randi([1 gp.runcontrol.pop_size], 1, floor(gp.selection.elite_fraction*gp.runcontrol.pop_size));
+        % how to not include pop with nan fitness?
+        idx_chosen = idx_chosen(~isnan( fitness(idx_chosen) ));
+    else
+        %indices of elite population only
+        [~, idx_chosen] = mink(fitness, floor( (gp.selection.elite_fraction) *gp.runcontrol.pop_size));
+        idx_chosen = idx_chosen';
+        %note "mink" ignores nan values
+    end
+else
+    [~, idx_chosen] = mink(fitness, floor( (gp.selection.elite_fraction) *gp.runcontrol.pop_size));
+    idx_chosen = idx_chosen';
+end
+[~, ia, ~] = unique(string2Beval(idx_chosen));
+idx_chosen = sort(idx_chosen(ia));
+
+%% run through all the possible equations to find the ones with constants
+for j= idx_chosen %1:length(string2Beval) 
     
     char_temp = convertStringsToChars((string2Beval(j)));
     str_idx = strfind(char_temp, '['); %start index positions of constants in the function
@@ -106,7 +124,7 @@ for j= idx_minFit' %1:length(string2Beval)
     %if equation has constants, this loop is initiated
     if ~isempty(str_idx) %&& ( ~isinf(fitness(j)) && ~isnan(fitness(j)) )
         
-        m = min(length(str_idx),7); %only first 7 coefficients are improved
+        m = min(length(str_idx),num2improv); %only first 7 coefficients are improved
         
         idx_new(end+1) = j; %contains the index of all the changed constants
           
@@ -123,20 +141,14 @@ for j= idx_minFit' %1:length(string2Beval)
             %breakdown(k+1) = string(char_temp(end_idx(k):str_idx(k+1)));
             coeffies(j,k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
             
-            %creating the respective multicomplex array for the constant
-            eval(['z' num2str(k) '(' num2str(2^k) ') = 0 ;']);
-            eval(['z' num2str(k) '(' num2str(2^(k-1)+1) ')= h ;']);
-            
             %creating equation with each constants c_j is replaced with c_j+i_j
-            new_eqn = new_eqn + "+multi(z" + num2str(k) + ")" + string(char_temp(end_idx(k):end_idx(k+1)-1));
+            new_eqn = new_eqn + "+z(" + num2str(k) + ")" + string(char_temp(end_idx(k):end_idx(k+1)-1));
         end
         
         %adding multi to last constant along with the remaining string
         k=m;
         coeffies(j,k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1));
-        eval(['z' num2str(k) '(' num2str(2^k) ') = 0 ;']);
-        eval(['z' num2str(k) '(' num2str(2^(k-1)+1) ')= h ;']);
-        new_eqn = new_eqn+ "+multi(z" + num2str(k) + ")" + string(char_temp(end_idx(k):end));
+        new_eqn = new_eqn+ "+z(" + num2str(k) + ")" + string(char_temp(end_idx(k):end));
         
         %breakdown(m+1) = string(char_temp(end_idx(m):end ));
         
@@ -146,7 +158,7 @@ for j= idx_minFit' %1:length(string2Beval)
         x = xtrain;
         eval(['out_orig=' evalstr_orig{1} ';']);
         
-        if length(out_orig)~=length(x)
+        if length(out_orig)==1
             out_orig = ones(1,length(x))*out_orig;
         end
         
@@ -154,7 +166,7 @@ for j= idx_minFit' %1:length(string2Beval)
         evalstr = tree2evalstr(temp,gp);
         
         p_num = zeros(1, m);
-        p_den = p_num;
+        %p_den = p_num;
         
         %for each pt
         for i=1:n
@@ -168,21 +180,21 @@ for j= idx_minFit' %1:length(string2Beval)
             
             %for each constant, adding their relevant contrib.
             for k = 1:m
-                deriv2 = out.zn(2^(k-1)+1)/h;
-                p_num(k) = p_num(k) + (out_orig(i)-y)*deriv2;
-                p_den(k) = p_den(k) + (out_orig(i)-y)^2;
+                deriv1 = out.zn(2^(k-1)+1)/h;
+                p_num(k) = p_num(k) + (out_orig(i)-y)*deriv1;
+                %p_den(k) = p_den(k) + (out_orig(i)-y)^2;
             end
             
         end
         
-        p_den = (p_den./n).^0.5;
-        add = a/n * p_num./p_den;
-        if any(isnan(add))
-            add(isnan(add)) = 0;
-        end
-        if any(isinf(add))
-            add(isinf(add)) = 0;
-        end
+        %p_den = (p_den./n).^0.5;
+        add = a/(n*fitness(j)) * p_num;
+%         if any(isnan(add))
+%             add(isnan(add)) = 0;
+%         end
+%         if any(isinf(add))
+%             add(isinf(add)) = 0;
+%         end
        
         coeff_new2(j, 1:m) = coeffies(j, 1:m) - add;
         
@@ -198,19 +210,7 @@ end
 
 idx_new = idx_new(2:end);
 
-% B = convertStringsToChars(string2Beval);
-% % B2 = convertStringsToChars(FD_re);
-% for j=1:length(B)
-%     C{j} = cellstr(B{j});
-% %     C2{j} = cellstr(B2{j});
-% end
-
-
-%gp2 = gp;
-%gp2.pop = C;
-
-%gp.easha = C;
-fitness = gp.fitness.values;
+fitness_new = fitness;
 for i = idx_new %1:gp2.runcontrol.pop_size
     
         %preprocess cell array of string expressions into a form that
@@ -218,19 +218,20 @@ for i = idx_new %1:gp2.runcontrol.pop_size
         evalstr = tree2evalstr(C{i},gp);
         
         
-        [fitness(i),gp] = feval(gp.fitness.fitfun,evalstr,gp);
+        [fitness_new(i),gp] = feval(gp.fitness.fitfun,evalstr,gp);
         %gp2.fitness.values(i) = fitness;
         
 end
 
 %sum(gp2.fitness.values < gp.fitness.values)
 
-temp_comparison = fitness < gp.fitness.values;
+temp_comparison = fitness_new < fitness;
 gp.pop(temp_comparison) = C(temp_comparison);
 gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 
-gp.improv(gp.state.count) = sum(temp_comparison);
+gp.improv(gp.state.count) = ( length(idx_new)-sum(temp_comparison) )/length(idx_new);
 
+gp.improv(gp.state.count)
 
 
 % if ~isempty(gp.userdata.user_fcn)

@@ -4,7 +4,8 @@ close all;
 % 
 % %gp = rungp(@spatial_evol_config);
 % figure;
-for i=1:5
+for i=1:1
+    b = 'bees'
     gp = rungp(@gpdemo1_config);
     eval(['gp_newton' num2str(i) '= gp;']);
     A = gp.results.history;
