@@ -159,7 +159,7 @@ for j= idx_chosen %1:length(string2Beval)
         eval(['out_orig=' evalstr_orig{1} ';']);
         
         if length(out_orig)==1
-            out_orig = ones(1,length(x))*out_orig;
+            out_orig = ones(length(x),1)*out_orig;
         end
         
         temp = cellstr(convertStringsToChars(new_eqn));

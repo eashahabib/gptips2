@@ -154,7 +154,7 @@ for j = idx_chosen %1:length(string2Beval)
             coeffies(j,k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
             
             %creating equation with each constants c_j is replaced with c_j+i_j
-            new_eqn(k) = string(char_temp(1:end_idx(k)-1)) + "1e-5i" + string(char_temp(end_idx(k):end));
+            new_eqn(k) = string(char_temp(1:end_idx(k)-1)) + "+1e-5i" + string(char_temp(end_idx(k):end));
             
             %for each constant, adding their relevant contrib.
             temp = cellstr(convertStringsToChars(new_eqn(k)));
@@ -162,7 +162,7 @@ for j = idx_chosen %1:length(string2Beval)
             eval(['out=' evalstr{1} ';']);
             deriv1 = imag(out)/h;
             
-            p_num(k) = sum((out_orig-y).*deriv1);
+            p_num(k) = sum((out_orig-y).*deriv1, 1);
         end
         
             
