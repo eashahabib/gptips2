@@ -73,7 +73,7 @@ string2Beval = string(C); %string to be evaluated
 pat = 'x(\d+)';
 string2Beval = regexprep(string2Beval,pat,'x(:,$1)'); %$1 makes x1 and x2 things, multiple x variables
 
-coeffies = zeros(gp.runcontrol.pop_size, 10); % empty array to store the coefficients
+coeffies = zeros(7, 1); % empty array to store the coefficients
 coeff_new2 = coeffies;
 %FD_re = string2Beval;
 
@@ -151,7 +151,7 @@ for j = idx_chosen %1:length(string2Beval)
         for k = 1:m
             %%
             %breakdown(k+1) = string(char_temp(end_idx(k):str_idx(k+1)));
-            coeffies(j,k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
+            coeffies(k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
             
             %creating equation with each constants c_j is replaced with c_j+i_j
             new_eqn(k) = string(char_temp(1:end_idx(k)-1)) + "+1e-5i" + string(char_temp(end_idx(k):end));
@@ -176,10 +176,10 @@ for j = idx_chosen %1:length(string2Beval)
             add(isinf(add)) = 0;
         end
      
-        coeff_new2(j, 1:m) = coeffies(j, 1:m) - add;
+        coeff_new2(1:m) = coeffies(1:m) - add;
         
         %% %updating the coefficient
-        C{j} = regexprep(C{j}, compose('%.4f',coeffies(j, 1:m)), compose('%.4f',coeff_new2(j, 1:m)));
+        C{j} = regexprep(C{j}, compose('%.4f',coeffies(1:m)), compose('%.4f',coeff_new2(1:m)));
         
     end
     
@@ -211,7 +211,7 @@ gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 
 gp.improv(gp.state.count) = ( sum(temp_comparison) )/length(idx_new);
 
-gp.improv(gp.state.count)
+%gp.improv(gp.state.count)
 
 
 % if ~isempty(gp.userdata.user_fcn)
