@@ -22,7 +22,7 @@ function gp = gpdemo1_config(gp)
 gp.runcontrol.pop_size = 300;			
 gp.runcontrol.num_gen = 500;
 gp.runcontrol.runs = 1;
-gp.runcontrol.verbose = 10;  
+gp.runcontrol.verbose = 25;  
 gp.runcontrol.timeout = inf;            %seconds
 gp.runcontrol.parallel.auto = true;
 

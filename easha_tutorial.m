@@ -5,7 +5,6 @@ close all;
 % %gp = rungp(@spatial_evol_config);
 % figure;
 for i=1:1
-    b = 'bees'
     gp = rungp(@gpdemo1_config);
     eval(['gp_newton' num2str(i) '= gp;']);
     A = gp.results.history;
@@ -20,6 +19,9 @@ for i=1:1
 %     myStats_pre.FITiters(i) = length(A.bestfitness);
 %     myStats_pre.FITtime(i) = B.runTimeElapsed;
 end
+
+save('filewithresults', '-append');
+
 % grid minor;
 % legend;
 % xlabel('generation'); ylabel('fitness')

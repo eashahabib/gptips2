@@ -244,7 +244,7 @@ temp_comparison = fitness_new < fitness;
 gp.pop(temp_comparison) = C(temp_comparison);
 gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 
-gp.improv(gp.state.count) = ( length(idx_new)-sum(temp_comparison) )/length(idx_new);
+gp.improv(gp.state.count) = ( sum(temp_comparison) )/length(idx_new);
 
 gp.improv(gp.state.count)
 

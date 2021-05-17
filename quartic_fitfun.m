@@ -43,7 +43,7 @@ fitness = sqrt(((err'*err)/numData));
 % fitness = sqrt(fitness/numData);
 
 %if this is a post run call to this function then plot graphs
-if gp.state.run_completed
+if 0 % gp.state.run_completed
     
     figure('name','GPTIPS 2 Multigene regression. Model predictions.','numbertitle','off');
     subplot(1+plotTest+plotValidation,1,1);

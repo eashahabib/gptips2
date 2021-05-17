@@ -1,5 +1,5 @@
-function gp = gp_userfcn(gp)
-%% GRADIENT DESCENT METHOD with multicomplex method
+function gp = gp_userfcn2(gp)
+%% GRADIENT DESCENT METHOD with complex set method
 %GP_USERFCN Calls a user defined function once per generation if one has been 
 %specified in the field GP.USERDATA.USER_FCN.
 % 
@@ -77,7 +77,8 @@ coeffies = zeros(gp.runcontrol.pop_size, 10); % empty array to store the coeffic
 coeff_new2 = coeffies;
 %FD_re = string2Beval;
 
-h = 1e-5; %complex step size
+% h SET INSIDE THE CODE MANUALLY!!!!!!
+h = 1e-5; %complex step size !!!!
 fitness = gp.fitness.values;
 a = min( [min(fitness),0.2] )/2; %step length
 xtrain = gp.userdata.xtrain;
@@ -89,11 +90,6 @@ idx_new=[0];
 
 %% array of multicomplex numbers upto i7
 num2improv = 6;
-for i=1:num2improv
-    z_temp = zeros(1,2^i);
-    z_temp(2^(i-1)+1) = h;
-    z(i) = multi(z_temp);
-end
 
 %% indices of elite population only 
 if gp.state.count > 1
@@ -116,7 +112,7 @@ end
 idx_chosen = sort(idx_chosen(ia));
 
 %% run through all the possible equations to find the ones with constants
-for j= 1:length(string2Beval) %idx_chosen %1:length(string2Beval) 
+for j = 1:length(string2Beval) %idx_chosen %1:length(string2Beval) 
     
     char_temp = convertStringsToChars((string2Beval(j)));
     str_idx = strfind(char_temp, '['); %start index positions of constants in the function
@@ -135,67 +131,50 @@ for j= 1:length(string2Beval) %idx_chosen %1:length(string2Beval)
         new_eqn = string(char_temp(1:end_idx(1)-1));
         
         
-        %for each coefficient
-        for k = 1:m-1
-            %%
-            %breakdown(k+1) = string(char_temp(end_idx(k):str_idx(k+1)));
-            coeffies(j,k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
-            
-            %creating equation with each constants c_j is replaced with c_j+i_j
-            new_eqn = new_eqn + "+z(" + num2str(k) + ")" + string(char_temp(end_idx(k):end_idx(k+1)-1));
-        end
-        
-        %adding multi to last constant along with the remaining string
-        k=m;
-        coeffies(j,k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1));
-        new_eqn = new_eqn+ "+z(" + num2str(k) + ")" + string(char_temp(end_idx(k):end));
-        
         %breakdown(m+1) = string(char_temp(end_idx(m):end ));
         
         %regexprep(C{j},exp,'x(:,$1)');
         evalstr_orig = tree2evalstr(cellstr(string2Beval{j}),gp);
         
-        x = xtrain;
+        x = xtrain; y = y1;
         eval(['out_orig=' evalstr_orig{1} ';']);
         
         if length(out_orig)==1
             out_orig = ones(1,length(x))*out_orig;
         end
         
-        temp = cellstr(convertStringsToChars(new_eqn));
-        evalstr = tree2evalstr(temp,gp);
         
         p_num = zeros(1, m);
         %p_den = p_num;
         
-        %for each pt
-        for i=1:n
+        %for each coefficient
+        for k = 1:m
             %%
-            x = xtrain(i,:); y=y1(i);
-            eval(['out=' evalstr{1} ';']);
+            %breakdown(k+1) = string(char_temp(end_idx(k):str_idx(k+1)));
+            coeffies(j,k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
             
-            if any(isnan(out.zn))
-                break;
-            end
+            %creating equation with each constants c_j is replaced with c_j+i_j
+            new_eqn(k) = string(char_temp(1:end_idx(k)-1)) + "1e-5i" + string(char_temp(end_idx(k):end));
             
             %for each constant, adding their relevant contrib.
-            for k = 1:m
-                deriv1 = out.zn(2^(k-1)+1)/h;
-                p_num(k) = p_num(k) + (out_orig(i)-y)*deriv1;
-                %p_den(k) = p_den(k) + (out_orig(i)-y)^2;
-            end
-            
+            temp = cellstr(convertStringsToChars(new_eqn(k)));
+            evalstr = tree2evalstr(temp,gp);
+            eval(['out=' evalstr{1} ';']);
+            deriv1 = imag(out)/h;
+            p_num(k) = sum((out_orig'-y).*deriv1);
         end
         
+            
         %p_den = (p_den./n).^0.5;
         add = a/(n*fitness(j)) * p_num;
+        
         if any(isnan(add))
             add(isnan(add)) = 0;
         end
         if any(isinf(add))
             add(isinf(add)) = 0;
         end
-       
+     
         coeff_new2(j, 1:m) = coeffies(j, 1:m) - add;
         
         %% %updating the coefficient
@@ -211,14 +190,14 @@ end
 idx_new = idx_new(2:end);
 
 fitness_new = fitness;
-for i = idx_new %1:gp2.runcontrol.pop_size
+for j = idx_new %1:gp2.runcontrol.pop_size
     
         %preprocess cell array of string expressions into a form that
         %Matlab can evaluate
-        evalstr = tree2evalstr(C{i},gp);
+        evalstr = tree2evalstr(C{j},gp);
         
         
-        [fitness_new(i),gp] = feval(gp.fitness.fitfun,evalstr,gp);
+        [fitness_new(j),gp] = feval(gp.fitness.fitfun,evalstr,gp);
         %gp2.fitness.values(i) = fitness;
         
 end

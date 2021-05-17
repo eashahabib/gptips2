@@ -116,7 +116,8 @@ for run=1:gp.runcontrol.runs;
         gp = evalfitness(gp);
         
         %call user defined function 
-        gp = gp_userfcn_hybrid2(gp); 
+        %gp = gp_userfcn_hybrid2(gp); 
+        gp = gp_userfcn(gp);
         
         %update run statistics
         gp = updatestats(gp);
