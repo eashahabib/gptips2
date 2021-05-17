@@ -116,8 +116,9 @@ for run=1:gp.runcontrol.runs;
         gp = evalfitness(gp);
         
         %call user defined function 
-        %gp = gp_userfcn_hybrid2(gp); 
-        gp = gp_userfcn(gp);
+        %gp = gp_userfcn_hybrid2(gp); %multicomplex newton
+        %gp = gp_userfcn(gp); %multicomplex GD
+        gp = gp_userfcn2(gp); %complex GD
         
         %update run statistics
         gp = updatestats(gp);

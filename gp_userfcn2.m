@@ -112,7 +112,7 @@ end
 idx_chosen = sort(idx_chosen(ia));
 
 %% run through all the possible equations to find the ones with constants
-for j = 1:length(string2Beval) %idx_chosen %1:length(string2Beval) 
+for j = idx_chosen %1:length(string2Beval) 
     
     char_temp = convertStringsToChars((string2Beval(j)));
     str_idx = strfind(char_temp, '['); %start index positions of constants in the function
@@ -140,7 +140,7 @@ for j = 1:length(string2Beval) %idx_chosen %1:length(string2Beval)
         eval(['out_orig=' evalstr_orig{1} ';']);
         
         if length(out_orig)==1
-            out_orig = ones(1,length(x))*out_orig;
+            out_orig = ones(length(x),1)*out_orig;
         end
         
         
@@ -161,7 +161,8 @@ for j = 1:length(string2Beval) %idx_chosen %1:length(string2Beval)
             evalstr = tree2evalstr(temp,gp);
             eval(['out=' evalstr{1} ';']);
             deriv1 = imag(out)/h;
-            p_num(k) = sum((out_orig'-y).*deriv1);
+            
+            p_num(k) = sum((out_orig-y).*deriv1);
         end
         
             

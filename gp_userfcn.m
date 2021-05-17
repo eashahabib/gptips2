@@ -116,7 +116,7 @@ end
 idx_chosen = sort(idx_chosen(ia));
 
 %% run through all the possible equations to find the ones with constants
-for j= 1:length(string2Beval) %idx_chosen %1:length(string2Beval) 
+for j= idx_chosen %1:length(string2Beval) 
     
     char_temp = convertStringsToChars((string2Beval(j)));
     str_idx = strfind(char_temp, '['); %start index positions of constants in the function
