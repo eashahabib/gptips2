@@ -1,5 +1,5 @@
 function gp = gp_userfcn2(gp)
-%% GRADIENT DESCENT METHOD with complex set method
+%% GRADIENT DESCENT METHOD with complex set method new
 %GP_USERFCN Calls a user defined function once per generation if one has been 
 %specified in the field GP.USERDATA.USER_FCN.
 % 
