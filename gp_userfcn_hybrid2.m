@@ -1,5 +1,5 @@
 function gp = gp_userfcn_hybrid2(gp)
-%% NEWTON'S METHOD
+%% NEWTON'S METHOD fully multicomplex
 %GP_USERFCN Calls a user defined function once per generation if one has been 
 %specified in the field GP.USERDATA.USER_FCN.
 % 
@@ -166,7 +166,7 @@ for j= idx_chosen %1:length(string2Beval)
         eval(['out_orig=' evalstr_orig{1} ';']);
         
         if length(out_orig)==1
-            out_orig = ones(1,length(x))*out_orig;
+            out_orig = ones(length(x),1)*out_orig;
         end
         
         temp = cellstr(convertStringsToChars(new_eqn));
@@ -175,7 +175,7 @@ for j= idx_chosen %1:length(string2Beval)
         temp = cellstr(convertStringsToChars(multi_eqn));
         evalstr_2nd = tree2evalstr(temp,gp);
         
-        sum1 = zeros(1, m);
+        sum1 = zeros(m, 1);
         sum2 = sum1;
         sum3 = sum1;
         
@@ -186,9 +186,9 @@ for j= idx_chosen %1:length(string2Beval)
             eval(['out=' evalstr{1} ';'])
             %eval(['out2(' num2str(k) ')=' evalstr_2nd{k} ';']);
             
-            if any(isnan(out.zn))% || any(isnan(out2.zn))
-                break;
-            end
+%             if any(isnan(out.zn))% || any(isnan(out2.zn))
+%                 break;
+%             end
             
             %for each constant, adding their relevant contrib.
             for k = 1:m

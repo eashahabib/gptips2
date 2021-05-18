@@ -144,7 +144,7 @@ for j = idx_chosen %1:length(string2Beval)
         end
         
         
-        p_num = zeros(1, m);
+        p_num = zeros(m, 1);
         %p_den = p_num;
         
         %for each coefficient
