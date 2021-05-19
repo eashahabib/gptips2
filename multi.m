@@ -131,47 +131,35 @@ methods
                  
              end
              
-             eval(['mrep = C' num2str(n) ';']);
+             %eval(['mrep = C' num2str(n) ';']);
              
-%              if n == 1
-%                  mrep=C1;
-%              end
-%              if n == 2
-%                  mrep=C2;
-%              end
-%              if n == 3
-%                  mrep=C3;
-%              end
-%              if n == 4
-%                  mrep=C4;
-%              end
-%              if n == 5
-%                  mrep=C5;
-%              end
-%              if n == 6
-%                  mrep=C6;
-%              end
-%              if n == 7
-%                  mrep=C7;
-%              end
-%              if n == 8
-%                  mrep=C8;
-%              end
-%              if n == 9
-%                  mrep=C9;
-%              end
-%              if n == 10
-%                  mrep=C10;
-%              end
-%              if n == 11
-%                  mrep=C11;
-%              end
-%              if n == 12
-%                  mrep=C12;
-%              end
-%              if n == 13
-%                  mrep=C13;
-%              end
+             if n == 1
+                 mrep=C1;
+             elseif n == 2
+                 mrep=C2;
+             elseif n == 3
+                 mrep=C3;
+             elseif n == 4
+                 mrep=C4;
+             elseif n == 5
+                 mrep=C5;
+             elseif n == 6
+                 mrep=C6;
+             elseif n == 7
+                 mrep=C7;
+             elseif n == 8
+                 mrep=C8;
+             elseif n == 9
+                 mrep=C9;
+             elseif n == 10
+                 mrep=C10;
+             elseif n == 11
+                 mrep=C11;
+             elseif n == 12
+                 mrep=C12;
+             elseif n == 13
+                 mrep=C13;
+             end
              
     end
       

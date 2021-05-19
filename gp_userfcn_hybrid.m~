@@ -3,6 +3,72 @@ function gp = gp_userfcn_hybrid(gp)
 %GP_USERFCN Calls a user defined function once per generation if one has been
 %specified in the field GP.USERDATA.USER_FCN.
 %
+%   Remarks:
+%
+%   The user defined function must accept (as 1st) and return (as 2nd) the
+%   GP structure as arguments.
+%
+%   Example:
+%
+%   In multigene symbolic regression the function
+%   regressmulti_fitfun_validate can be called once per generation to
+%   evaluate the best individual so far on a validation ('holdout') data
+%   set.
+%
+%   Copyright (c) 2009-2015 Dominic Searson
+%
+%   GPTIPS 2
+%
+% C = gp.fitness.returnvalues{gp.state.current_individual}; %current coeffs
+% evalstr = tree2evalstr(gp.pop{250},gp);
+%
+% y = gp.userdata.ytrain;
+% numData = gp.userdata.numytrain; % num of data
+% numGenes = numel(evalstr);
+%
+% pat = 'x(\d+)';
+% evalstr = regexprep(evalstr,pat,'gp.userdata.xtrain(:,$1)+0.000001i')
+%
+%
+% %eval each gene in the current individual
+% for i = 1:numGenes
+%     ind = i + 1;
+%     eval(['geneOutputs(:,ind)=' evalstr{i} ';']);
+%     geneOutputs(:,ind) = imag(geneOutputs(:,ind))/0.000001;
+%
+%     %check for nonsensical answers and break out early with an 'inf' if so
+%     if  any(~isfinite(geneOutputs(:,ind))) || any(~isreal(geneOutputs(:,ind)))
+%         fitness = Inf;
+%         gp.fitness.returnvalues{gp.state.current_individual} = [];
+%         return
+%     end
+% end
+%
+% geneOutputs
+%
+% %only calc. weighting coeffs during an actual run or if forced
+%
+%     %set gp.userdata.bootSample to true to resample data for weights computation
+%
+%     %prepare LS matrix
+%
+%         goptrans = geneOutputs';
+%         prj = goptrans * geneOutputs;
+%
+%     %calculate tree weight coeffs using SVD based least squares
+%     %normal equation
+%
+%             theta = pinv(prj) * goptrans * y;
+%
+%         %theta = [];
+%         %fitness = Inf;
+%         %gp.fitness.returnvalues{gp.state.current_individual} = [];
+%         %return;
+%
+%
+
+
+%gp.state.run_completed = false;
 
 %% initial equations
 C = gp.pop;
@@ -92,12 +158,27 @@ for j= idx_chosen %1:length(string2Beval)
         %for each coefficient
         for k = 1:m
             %%
+            %breakdown(k+1) = string(char_temp(end_idx(k):str_idx(k+1)));
             coeffies(k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
             
             multi_eqn(k) = string(char_temp(1:end_idx(k)-1)) + "+ z(1) + z(2) " + string(char_temp(end_idx(k):end));
             
             %array to hold the multicomplex equations for 2nd derivative
         end
+        
+        %adding multi to last constant along with the remaining string
+        %         k=m;
+        %         coeffies(k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1));
+        %         multi_eqn(k) = string(char_temp(1:end_idx(k)-1)) + "+ z(1) + z(2)" + string(char_temp(end_idx(k):end));
+        
+        %         new_eqn = string(char_temp(1:end_idx(k)-1)) + "+1e-5i" + string(char_temp(end_idx(k):end));
+        %         temp = cellstr(convertStringsToChars(new_eqn));
+        %         evalstr = tree2evalstr(temp,gp);
+        %         eval(['out=' evalstr{1} ';']);
+        %         deriv1 = imag(out)/h;
+        
+        %         sum1(k) = sum( (out_orig-y).*deriv1 );
+        %         sum2(k) = deriv1'*deriv1;
         
         %%
         
@@ -118,11 +199,14 @@ for j= idx_chosen %1:length(string2Beval)
             %for each constant, adding their relevant contrib.
             for k = 1:m
                 eval(['out_multi=' evalstr_2nd{k} ';']);
-                deriv1 = out_multi.zn(2)/h;
+                deriv1 = out_multi.zn()/h;
                 deriv2 = imgn(out_multi)/h^2;
                 
-                sum1(k) = sum1(k) + (out_orig(i)-y)*deriv1 ;
-                sum2(k) = sum2(k) + deriv1^2 + (out_orig(i)-y)*deriv2;
+                sum1(k) = sum( (out_orig-y).*deriv1 );
+                sum2(k) = deriv1'*deriv1;
+                
+                
+                sum2(k) = sum2(k) + (out_orig(i)-y)*deriv2;
                 sum3(k) = sum3(k) + (out_orig(i)-y)^2;
             end
             
@@ -171,7 +255,7 @@ gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 
 gp.improv(gp.state.count) = ( sum(temp_comparison) )/length(idx_new);
 
-%gp.improv(gp.state.count)
+gp.improv(gp.state.count)
 
 
 

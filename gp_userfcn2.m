@@ -1,5 +1,5 @@
 function gp = gp_userfcn2(gp)
-%% GRADIENT DESCENT METHOD with complex set method new
+%% GRADIENT DESCENT METHOD with complex set method
 %GP_USERFCN Calls a user defined function once per generation if one has been 
 %specified in the field GP.USERDATA.USER_FCN.
 % 
@@ -128,7 +128,7 @@ for j = idx_chosen %1:length(string2Beval)
         %breakdown = ""; % will contain everything except constants
         %breakdown(1) = string(char_temp(1:str_idx(1)));
         
-        new_eqn = string(char_temp(1:end_idx(1)-1));
+%         new_eqn = string(char_temp(1:end_idx(1)-1));
         
         
         %breakdown(m+1) = string(char_temp(end_idx(m):end ));
@@ -154,10 +154,10 @@ for j = idx_chosen %1:length(string2Beval)
             coeffies(k) = str2double(char_temp(str_idx(k)+1:end_idx(k)-1)); %extracting coefficients
             
             %creating equation with each constants c_j is replaced with c_j+i_j
-            new_eqn(k) = string(char_temp(1:end_idx(k)-1)) + "+1e-5i" + string(char_temp(end_idx(k):end));
+            new_eqn = string(char_temp(1:end_idx(k)-1)) + "+1e-5i" + string(char_temp(end_idx(k):end));
             
             %for each constant, adding their relevant contrib.
-            temp = cellstr(convertStringsToChars(new_eqn(k)));
+            temp = cellstr(convertStringsToChars(new_eqn));
             evalstr = tree2evalstr(temp,gp);
             eval(['out=' evalstr{1} ';']);
             deriv1 = imag(out)/h;

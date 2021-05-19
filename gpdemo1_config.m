@@ -24,8 +24,10 @@ gp.runcontrol.num_gen = 500;
 gp.runcontrol.runs = 1;
 gp.runcontrol.verbose = 25;  
 gp.runcontrol.timeout = inf;            %seconds
-gp.runcontrol.parallel.auto = true;
+gp.fitness.terminate = true;
+gp.fitness.terminate_value = 0.1;
 
+gp.runcontrol.parallel.auto = true;
 
 %selection
 gp.selection.tournament.size = 20;
@@ -34,8 +36,6 @@ gp.selection.elite_fraction = 0.2;
 
 %fitness function
 gp.fitness.fitfun = @quartic_fitfun; 
-gp.fitness.terminate = true;
-gp.fitness.terminate_value = 0.1;
 
 %quartic polynomial data  
 [x1, x2] = meshgrid(-5:0.4:5, -5:0.4:5);
