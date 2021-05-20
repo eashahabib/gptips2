@@ -95,21 +95,22 @@ for i=1:num2improv
     z(i) = multi(z_temp);
 end
 
-%% indices of elite population only 
+%% indices to be improved
+frac = gp.selection.elite_fraction+0.2; % 20 percent of the remaining population is also included
 if gp.state.count > 1
     if gp.improv(gp.state.count-1)<0.1
         % random indices,
-        idx_chosen = randi([1 gp.runcontrol.pop_size], 1, floor(gp.selection.elite_fraction*gp.runcontrol.pop_size));
+        idx_chosen = randi([1 gp.runcontrol.pop_size], 1, floor(frac*gp.runcontrol.pop_size));
         % how to not include pop with nan fitness?
         idx_chosen = idx_chosen(~isnan( fitness(idx_chosen) ));
     else
         %indices of elite population only
-        [~, idx_chosen] = mink(fitness, floor( (gp.selection.elite_fraction) *gp.runcontrol.pop_size));
+        [~, idx_chosen] = mink(fitness, floor( frac*gp.runcontrol.pop_size));
         idx_chosen = idx_chosen';
         %note "mink" ignores nan values
     end
 else
-    [~, idx_chosen] = mink(fitness, floor( (gp.selection.elite_fraction) *gp.runcontrol.pop_size));
+    [~, idx_chosen] = mink(fitness, floor( frac*gp.runcontrol.pop_size));
     idx_chosen = idx_chosen';
 end
 [~, ia, ~] = unique(string2Beval(idx_chosen));
