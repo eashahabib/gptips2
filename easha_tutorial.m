@@ -3,11 +3,14 @@ clc;
 %close all;
 % 
 % %gp = rungp(@spatial_evol_config);
-% figure;
-for i=2:3
+figure;
+for i=1
     i
     gp = rungp(@gpdemo1_config);
-    eval(['gp_orig' num2str(i) '= gp;']);
+    eval(['gp_Newt' num2str(i) '= gp;']);
+    
+    gppretty(gp, 'best')
+    
     A = gp.results.history;
     B = gp.state;
      plot(1:gp.state.count, gp.results.history.bestfitness','-', 'LineWidth', 1.5); 
