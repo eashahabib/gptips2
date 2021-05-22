@@ -73,6 +73,7 @@ gp.nodes.const.p_ERC = 0.3;
 
 %maximum depth of trees 
 gp.treedef.max_depth = 13; 
+gp.treedef.max_nodes = 50;  	              
  	              
 %maximum depth of sub-trees created by mutation operator
 gp.treedef.max_mutate_depth = 6;
