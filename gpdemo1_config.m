@@ -41,7 +41,7 @@ gp.fitness.fitfun = @quartic_fitfun;
 % [x1, x2] = meshgrid(-5:0.4:5, -5:0.4:5);
 % x1 = x1(:); x2 = x2(:);
 % y = 1./(1+x1.^-4) + 1./(1+x2.^-4);
-x = meshgridequal(-2:0.4:2, 4);
+x = meshgridequal(-1:0.4:1, 4);
 x1 = x(:,1); x2 = x(:,2); x3 = x(:,3); x4 = x(:,4);
 y = 4.*x1.*x2.*cos((x3)) + exp(sin(x4));
 gp.userdata.ytrain = y;
@@ -50,7 +50,7 @@ gp.userdata.xtrain = [x1 x2 x3 x4];
 %test grid
 % [x1, x2] = meshgrid(-5:0.2:5, -5:0.2:5);
 % x1 = x1(:); x2 = x2(:);
-x = meshgridequal(-2:0.4:2, 4);
+x = meshgridequal(-1:0.4:1, 4);
 x1 = x(:,1); x2 = x(:,2); x3 = x(:,3); x4 = x(:,4);
 y = 4.*x1.*x2.*cos((x3)) + exp(sin(x4));
 gp.userdata.ytest = y;

@@ -1,26 +1,28 @@
 %clc; clear; 
 clc;
-close all;
+%close all;
 % 
 % %gp = rungp(@spatial_evol_config);
 % figure;
-for i=1:1
+for i=2:3
+    i
     gp = rungp(@gpdemo1_config);
-    eval(['gp_newton' num2str(i) '= gp;']);
+    eval(['gp_orig' num2str(i) '= gp;']);
     A = gp.results.history;
     B = gp.state;
-%     plot(1:length(gp.results.history.bestfitness(1:end)), gp.results.history.bestfitness(1:end)', 'LineWidth', 1.5); hold on;
+     plot(1:gp.state.count, gp.results.history.bestfitness','-', 'LineWidth', 1.5); 
+     hold on;
 %      myStats2.bestfitness(1:length(A.bestfitness),i) = A.bestfitness(1:end);
-     myStats.FITiters(i) = length(A.bestfitness);
-     myStats.FITtime(i) = B.runTimeElapsed;
-     myStats.FITfitness(i) = gp.results.best.fitness;
+%      myStats.FITiters(i) = length(A.bestfitness);
+%      myStats.FITtime(i) = B.runTimeElapsed;
+%      myStats.FITfitness(i) = gp.results.best.fitness;
      
 %     
 %     myStats_pre.FITiters(i) = length(A.bestfitness);
 %     myStats_pre.FITtime(i) = B.runTimeElapsed;
 end
 
-save('filewithresults', '-append');
+%save('filewithresults', '-append');
 
 % grid minor;
 % legend;
@@ -31,7 +33,7 @@ save('filewithresults', '-append');
 % 
 % runtree(gp, 'best')
 
-% 
+% % shows the equation in a readbale way
 % gppretty(gp, 'best')
 % 
 % 
