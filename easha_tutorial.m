@@ -3,16 +3,16 @@ clc;
 %close all;
 % 
 % %gp = rungp(@spatial_evol_config);
-figure;
+%figure;
 for i=1
     i
     gp = rungp(@gpdemo1_config);
-    eval(['gp_Newt' num2str(i) '= gp;']);
+    eval(['JINAY1_gp_orig' num2str(i) '= gp;']);
     
     gppretty(gp, 'best')
     
-    A = gp.results.history;
-    B = gp.state;
+%     A = gp.results.history;
+%     B = gp.state;
      plot(1:gp.state.count, gp.results.history.bestfitness','-', 'LineWidth', 1.5); 
      hold on;
 %      myStats2.bestfitness(1:length(A.bestfitness),i) = A.bestfitness(1:end);
@@ -25,7 +25,7 @@ for i=1
 %     myStats_pre.FITtime(i) = B.runTimeElapsed;
 end
 
-%save('filewithresults', '-append');
+save('filewithresultsMAC');
 
 % grid minor;
 % legend;

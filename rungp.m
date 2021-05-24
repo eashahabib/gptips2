@@ -71,8 +71,7 @@ gp = gprandom(gp);
 %run user configuration file
 gp = feval(configFile,gp);
 
-%gp.easha = zeros(1, gp.runcontrol.pop_size);
-gp.improv = zeros(1, gp.runcontrol.pop_size);
+gp.improv = zeros(1, gp.runcontrol.num_gen);
 
 %multiple runs (are merged after each run)
 for run=1:gp.runcontrol.runs;
@@ -116,9 +115,9 @@ for run=1:gp.runcontrol.runs;
         gp = evalfitness(gp);
         
         %call user defined function 
-        %gp = gp_userfcn_hybrid2(gp); %multicomplex newton
+        gp = gp_userfcn_hybrid(gp); %multicomplex newton
         %gp = gp_userfcn(gp); %multicomplex GD
-        gp = gp_userfcn2(gp); %complex GD
+        %gp = gp_userfcn2(gp); %complex GD
         
         %update run statistics
         gp = updatestats(gp);

@@ -36,7 +36,9 @@ end
 
 %% indices to be improved
 frac = gp.selection.elite_fraction+0.2; % 20 percent of the remaining population is also included
-if gp.state.count > 1
+if gp.state.count == 1
+    return
+else
     if gp.improv(gp.state.count-1)<0.1
         % random indices,
         idx_chosen = randi([1 gp.runcontrol.pop_size], 1, floor(frac*gp.runcontrol.pop_size));
@@ -48,9 +50,6 @@ if gp.state.count > 1
         idx_chosen = idx_chosen';
         %note "mink" ignores nan values
     end
-else
-    [~, idx_chosen] = mink(fitness, floor( frac*gp.runcontrol.pop_size));
-    idx_chosen = idx_chosen';
 end
 [~, ia, ~] = unique(string2Beval(idx_chosen));
 idx_chosen = sort(idx_chosen(ia));
@@ -80,15 +79,6 @@ for j= idx_chosen %1:length(string2Beval)
         sum2 = sum1;
         sum3 = sum1;
         
-        x = xtrain; y = ytrain;
-        evalstr_orig = tree2evalstr(cellstr(string2Beval{j}),gp);
-        
-        
-        eval(['out_orig=' evalstr_orig{1} ';']);
-        
-        if length(out_orig)==1
-            out_orig = ones(length(x), 1)*out_orig;
-        end
         %for each coefficient
         for k = 1:m
             %%
@@ -118,12 +108,13 @@ for j= idx_chosen %1:length(string2Beval)
             %for each constant, adding their relevant contrib.
             for k = 1:m
                 eval(['out_multi=' evalstr_2nd{k} ';']);
-                deriv1 = out_multi.zn(2)/h;
-                deriv2 = imgn(out_multi)/h^2;
+                out=out_multi.zn;
+                deriv1 = out(2)/h;
+                deriv2 = out(end)/h^2;
                 
-                sum1(k) = sum1(k) + (out_orig(i)-y)*deriv1 ;
-                sum2(k) = sum2(k) + deriv1^2 + (out_orig(i)-y)*deriv2;
-                sum3(k) = sum3(k) + (out_orig(i)-y)^2;
+                sum1(k) = sum1(k) + (out(1)-y)*deriv1 ;
+                sum2(k) = sum2(k) + deriv1^2 + (out(1)-y)*deriv2;
+                sum3(k) = sum3(k) + (out(1)-y)^2;
             end
             
         end
@@ -172,6 +163,7 @@ gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 gp.improv(gp.state.count) = ( sum(temp_comparison) )/length(idx_new);
 
 %gp.improv(gp.state.count)
+
 
 
 
