@@ -6,8 +6,15 @@ clc;
 %figure;
 for i=1
     i
-    gp = rungp(@gpdemo1_config);
-    eval(['JINAY1_gp_orig' num2str(i) '= gp;']);
+%     gp = rungp(@gpdemo1_config);
+    gp = rungp(@gpTEST3_1_config);
+
+
+%     eval(['ARMANI2_gp_orig' num2str(i) '= gp;']);
+%     eval(['ARMANI2_gp_complexGD' num2str(i) '= gp;']);
+%     eval(['ARMANI2_gp_newton' num2str(i) '= gp;']);
+            
+
     
     gppretty(gp, 'best')
     
@@ -25,7 +32,7 @@ for i=1
 %     myStats_pre.FITtime(i) = B.runTimeElapsed;
 end
 
-save('filewithresultsMAC');
+save('filewithresultsMAC2');
 
 % grid minor;
 % legend;

@@ -28,6 +28,7 @@ idx_new=[0]; % array to hold the indices of changed eqns
 
 %% array of multicomplex numbers upto i7
 num2improv = 6;
+multi_eqn(num2improv) = string(" ");
 for i=1:num2improv
     z_temp = zeros(1,2^i);
     z_temp(2^(i-1)+1) = h;
