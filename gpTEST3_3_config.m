@@ -37,10 +37,10 @@ gp.selection.elite_fraction = 0.2;
 %fitness function
 gp.fitness.fitfun = @quartic_fitfun; 
 
-%Kotanchek data 
-x = meshgridequal(0:0.6:4, 2);
+%RatPol2D
+x = meshgridequal(0:1:6, 2);
 x1 = x(:,1); x2 = x(:,2);
-y = exp(-(x1-1).^2) ./ (1.2+(x2-2.5).^2);
+y = ((x1-3).^4+(x2-3).^3-(x2-3))./((x2-2).^4+10);
 gp.userdata.ytrain = y;
 gp.userdata.xtrain = x;
 
@@ -53,6 +53,14 @@ gp.userdata.xtrain = x;
 % gp.userdata.ytest = y;
 % gp.userdata.xtest = [x1 x2 x3 x4];
 
+% x=linspace(-1,1,20)'; 
+% gp.userdata.x = x;
+% gp.userdata.y = 1./x + 22*x.^2 + x.^3 + x.^4; 
+% gp.userdata.name = 'Quartic Polynomial';
+
+% y = 1./(1+x1.^-4) + 1./(1+x2.^-4);
+% y = 8./(1 + x1.^2 + x2.^1);
+% y = 22 - 4.2.*(cos(x1) - tan(x2)).*(tanh(x3)./sin(x4));
 
 %input configuration 
 gp.nodes.inputs.num_inp = size(gp.userdata.xtrain,2); 		         

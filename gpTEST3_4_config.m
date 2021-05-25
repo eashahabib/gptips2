@@ -32,18 +32,15 @@ gp.runcontrol.parallel.auto = true;
 %selection
 gp.selection.tournament.size = 20;
 gp.selection.tournament.p_pareto = 0.3;
-gp.selection.elite_fraction = 0.3;
+gp.selection.elite_fraction = 0.2;
 
 %fitness function
 gp.fitness.fitfun = @quartic_fitfun; 
 
-%quartic polynomial data  
-% [x1, x2] = meshgrid(-5:0.4:5, -5:0.4:5);
-% x1 = x1(:); x2 = x2(:);
-% y = 1./(1+x1.^-4) + 1./(1+x2.^-4);
-x = meshgridequal(0:0.7:4, 2);
+%Hock
+x = meshgridequal(0:1:5, 2);
 x1 = x(:,1); x2 = x(:,2);
-y = exp(-(x1.^2-1).^2)./(1.2+(x2-2.5)^2);
+y = (30+x1.*sin(x1)).*(4+exp(-x2));
 gp.userdata.ytrain = y;
 gp.userdata.xtrain = x;
 
@@ -74,15 +71,15 @@ gp.nodes.const.p_ERC = 0.3;
 gp.nodes.const.p_int = 0.1;
 
 %maximum depth of trees 
-gp.treedef.max_depth = 8;
+gp.treedef.max_depth = 4;
+
+%maximum depth of sub-trees created by mutation operator
+gp.treedef.max_mutate_depth = 2;
 
 gp.treedef.max_nodes = inf;
-gp.operators.mutation.p_mutate = 0.34;
-gp.operators.crossover.p_cross = 0.64;
-gp.operators.directrepro.p_direct = 0.02;
- 	              
-%maximum depth of sub-trees created by mutation operator
-gp.treedef.max_mutate_depth = 6;
+gp.operators.mutation.p_mutate = 0.40;
+gp.operators.crossover.p_cross = 0.40;
+gp.operators.directrepro.p_direct = 0.20;
 
 %genes
 gp.genes.multigene = false;

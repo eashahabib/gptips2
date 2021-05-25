@@ -37,12 +37,12 @@ gp.selection.elite_fraction = 0.2;
 %fitness function
 gp.fitness.fitfun = @quartic_fitfun; 
 
-%Kotanchek data 
-x = meshgridequal(0:0.6:4, 2);
-x1 = x(:,1); x2 = x(:,2);
-y = exp(-(x1-1).^2) ./ (1.2+(x2-2.5).^2);
+%Branin Hoo
+[x1, x2] = meshgrid(-5:3:10, 0:3:15);
+x1 = x1(:); x2 = x2(:);
+y = (x2 - 5.1*x1.^2/4/pi^2 + 5/pi*x1 - 6).^2 + 10*(1-pi/2)*cos(x1) + 10;
 gp.userdata.ytrain = y;
-gp.userdata.xtrain = x;
+gp.userdata.xtrain = [x1 x2];
 
 %test grid
 % [x1, x2] = meshgrid(-5:0.2:5, -5:0.2:5);
@@ -53,6 +53,14 @@ gp.userdata.xtrain = x;
 % gp.userdata.ytest = y;
 % gp.userdata.xtest = [x1 x2 x3 x4];
 
+% x=linspace(-1,1,20)'; 
+% gp.userdata.x = x;
+% gp.userdata.y = 1./x + 22*x.^2 + x.^3 + x.^4; 
+% gp.userdata.name = 'Quartic Polynomial';
+
+% y = 1./(1+x1.^-4) + 1./(1+x2.^-4);
+% y = 8./(1 + x1.^2 + x2.^1);
+% y = 22 - 4.2.*(cos(x1) - tan(x2)).*(tanh(x3)./sin(x4));
 
 %input configuration 
 gp.nodes.inputs.num_inp = size(gp.userdata.xtrain,2); 		         
