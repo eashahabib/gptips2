@@ -20,7 +20,7 @@ function gp = gpdemo1_config(gp)
 
 %run control
 gp.runcontrol.pop_size = 200;			
-gp.runcontrol.num_gen = 50;
+gp.runcontrol.num_gen = 100;
 gp.runcontrol.runs = 2;
 gp.runcontrol.verbose = 25;  
 gp.runcontrol.timeout = 10*60*60;            %seconds

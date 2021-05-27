@@ -20,7 +20,7 @@ function gp = gpdemo1_config(gp)
 
 %run control
 gp.runcontrol.pop_size = 300;			
-gp.runcontrol.num_gen = 50;
+gp.runcontrol.num_gen = 100;
 gp.runcontrol.runs = 2;
 gp.runcontrol.verbose = 25;  
 gp.runcontrol.timeout = 10*60*60;            %seconds
@@ -38,8 +38,8 @@ gp.selection.elite_fraction = 0.2;
 gp.fitness.fitfun = @quartic_fitfun; 
 
 %Salustowicz
-x = 0.05:0.1:9.95;
-y = exp(-x).*x.^3.*cos(x).*sin(x).*(cos(x).*sin(x).^2-1);
+x = [0.05:0.1:9.95]';
+y = exp(-x) .* x.^3 .* cos(x) .* sin(x) .* (cos(x) .* sin(x).^2 - 1 );
 gp.userdata.ytrain = y;
 gp.userdata.xtrain = x;
 
