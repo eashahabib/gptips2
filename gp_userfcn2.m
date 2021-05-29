@@ -180,7 +180,7 @@ for j = idx_chosen %1:length(string2Beval)
         coeff_new2(1:m) = coeffies(1:m) - add;
         
         %% %updating the coefficient
-        C{j} = regexprep(C{j}, compose('%.4f',coeffies(1:m)), compose('%.4f',coeff_new2(1:m)));
+        C{j} = regexprep(C{j}, compose('%.3f',coeffies(1:m)), compose('%.3f',coeff_new2(1:m)));
         
     end
     
