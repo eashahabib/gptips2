@@ -23,7 +23,7 @@ gp.runcontrol.pop_size = 250;
 gp.runcontrol.num_gen = 1000;
 gp.runcontrol.runs = 2;
 gp.runcontrol.verbose = 25;  
-gp.runcontrol.timeout = 2*60;       %2 min timeout     %seconds
+gp.runcontrol.timeout = 5*60;       %2 min timeout     %seconds
 gp.fitness.terminate = true;
 gp.fitness.terminate_value = 0.1;
 

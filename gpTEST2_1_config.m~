@@ -23,7 +23,7 @@ gp.runcontrol.pop_size = 100;
 gp.runcontrol.num_gen = 500;
 gp.runcontrol.runs = 2;
 gp.runcontrol.verbose = 25;  
-gp.runcontrol.timeout = 10*60*60;            %seconds
+gp.runcontrol.timeout = 2*60*60;            %seconds
 gp.fitness.terminate = true;
 gp.fitness.terminate_value = 0.1;
 
@@ -38,12 +38,9 @@ gp.selection.elite_fraction = 0.05;
 gp.fitness.fitfun = @quartic_fitfun; 
 
 %quartic polynomial data  
-% [x1, x2] = meshgrid(-5:0.4:5, -5:0.4:5);
-% x1 = x1(:); x2 = x2(:);
-% y = 1./(1+x1.^-4) + 1./(1+x2.^-4);
-x = meshgridequal(0:0.7:4, 2);
-x1 = x(:,1); x2 = x(:,2);
-y = exp(-(x1-1).^2)./(1.2+(x2-2.5).^2);
+x = meshgridequal(-1:0.4:0.6, 4);
+x1 = x(:,1); x2 = x(:,2); x3 = x(:,3); x4 = x(:,4);
+y = 4.*x1.*x2.*log(abs(x3)) + exp(sin(x4));
 gp.userdata.ytrain = y;
 gp.userdata.xtrain = x;
 

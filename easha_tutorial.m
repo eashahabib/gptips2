@@ -4,7 +4,7 @@ clc;
 % 
 % %gp = rungp(@spatial_evol_config);
 %figure;
-for i=1:15
+for i=2:12
     i
     
     gp = rungp(@gpTEST1_config);
@@ -54,7 +54,7 @@ for i=1:15
 %     myStats_pre.FITtime(i) = B.runTimeElapsed;
 end
 
-save('filewithresultsCORRECTIONMAC_allsets_15iters');
+save('filewithresultsCORRECTIONMAC_allsets_12iters');
 
 % grid minor;
 % legend;
