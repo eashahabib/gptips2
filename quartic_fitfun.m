@@ -32,9 +32,12 @@ numData = length(y); % num of data
 
 %fitness is sum of absolute differences between actual and predicted y
 %fitness = sum( abs(out-y) );
-
-err = y - out;
-fitness = sqrt(((err'*err)/numData));
+if exist('out', 'var')
+    err = y - out;
+    fitness = sqrt(((err'*err)/numData));
+else
+    fitness = nan;
+end
 
 % fitness = 0;
 % for i=1:length(y)

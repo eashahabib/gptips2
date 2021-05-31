@@ -3,40 +3,40 @@ clc;
 %close all;
 % 
 % %gp = rungp(@spatial_evol_config);
-%figure;
-for i=2:12
+%figure; 
+for i=1:4
     i
     
     gp = rungp(@gpTEST1_config);
-    eval(['GPTIPS1_gp_newton' num2str(i) '= gp;']);
+    eval(['GPTIPS1_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
     
     gp = rungp(@gpTEST2_1_config);
-    eval(['JINAY1_gp_newton' num2str(i) '= gp;']);
+    eval(['JINAY1_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
     
     gp = rungp(@gpTEST2_2_config);
-    eval(['JINAY2_gp_newton' num2str(i) '= gp;']);
+    eval(['JINAY2_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
     
     gp = rungp(@gpTEST3_1_config);
-    eval(['ARMANI1_gp_newton' num2str(i) '= gp;']);
+    eval(['ARMANI1_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
     
     gp = rungp(@gpTEST3_2_config);
-    eval(['ARMANI2_gp_newton' num2str(i) '= gp;']);
+    eval(['ARMANI2_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
     
     gp = rungp(@gpTEST3_3_config);
-    eval(['ARMANI3_gp_newton' num2str(i) '= gp;']);
+    eval(['ARMANI3_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
     
     gp = rungp(@gpTEST3_4_config);
-    eval(['ARMANI4_gp_newton' num2str(i) '= gp;']);
+    eval(['ARMANI4_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
     
     gp = rungp(@gpTEST3_5_config);
-    eval(['ARMANI5_gp_newton' num2str(i) '= gp;']);
+    eval(['ARMANI5_gp_multiGD' num2str(i) '= gp;']);
     gppretty(gp, 'best')
 
     
