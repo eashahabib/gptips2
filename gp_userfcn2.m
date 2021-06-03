@@ -84,6 +84,8 @@ a = min( [min(fitness),0.2] )/2; %step length
 xtrain = gp.userdata.xtrain;
 y1 = gp.userdata.ytrain;
 
+fitness_new = fitness;
+
 n = length(y1);
 
 idx_new=[0];
@@ -182,18 +184,6 @@ for j = idx_chosen %1:length(string2Beval)
         %% %updating the coefficient
         C{j} = regexprep(C{j}, compose('%.3f',coeffies(1:m)), compose('%.3f',coeff_new2(1:m)));
         
-    end
-    
-end
-
-%evaluate fitness with the new coeffs
-% keep new constants only for those whose  fitness_new < fitness_old
-
-idx_new = idx_new(2:end);
-
-fitness_new = fitness;
-for j = idx_new %1:gp2.runcontrol.pop_size
-    
         %preprocess cell array of string expressions into a form that
         %Matlab can evaluate
         evalstr = tree2evalstr(C{j},gp);
@@ -201,8 +191,15 @@ for j = idx_new %1:gp2.runcontrol.pop_size
         
         [fitness_new(j),gp] = feval(gp.fitness.fitfun,evalstr,gp);
         %gp2.fitness.values(i) = fitness;
-        
+    end
+    
 end
+
+%evaluate fitness with the new coeffs
+% keep new constants only for those whose  fitness_new < fitness_old
+
+%idx_new = idx_new(2:end);
+
 
 %sum(gp2.fitness.values < gp.fitness.values)
 
@@ -210,7 +207,7 @@ temp_comparison = fitness_new < fitness;
 gp.pop(temp_comparison) = C(temp_comparison);
 gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 
-gp.improv(gp.state.count) = ( sum(temp_comparison) )/length(idx_new);
+gp.improv(gp.state.count) = ( sum(temp_comparison) )/(length(idx_new)-1);
 
 %gp.improv(gp.state.count)
 

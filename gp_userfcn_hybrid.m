@@ -22,6 +22,8 @@ fitness = gp.fitness.values;
 xtrain = gp.userdata.xtrain;
 ytrain = gp.userdata.ytrain;
 
+fitness_new = fitness;
+
 n = length(ytrain);
 
 idx_new=[0]; % array to hold the indices of changed eqns
@@ -134,6 +136,14 @@ for j= idx_chosen %1:length(string2Beval)
         C{j} = regexprep(C{j}, compose('%.3f',coeffies(1:m)), compose('%.3f',coeff_new2(1:m)));
         %note the 0.3 corresponds to the no of the dp set in the config
         %file to be used. It is currently always 3dp for all runs
+        
+        %preprocess cell array of string expressions into a form that
+        %Matlab can evaluate
+        evalstr = tree2evalstr(C{j},gp);
+        
+        
+        [fitness_new(j),gp] = feval(gp.fitness.fitfun,evalstr,gp);
+        %gp2.fitness.values(i) = fitness;
     end
     
 end
@@ -141,20 +151,8 @@ end
 %evaluate fitness with the new coeffs
 % keep new constants only for those whose  fitness_new < fitness_old
 
-idx_new = idx_new(2:end);
+%idx_new = idx_new(2:end);
 
-fitness_new = fitness;
-for i = idx_new %1:gp2.runcontrol.pop_size
-    
-    %preprocess cell array of string expressions into a form that
-    %Matlab can evaluate
-    evalstr = tree2evalstr(C{i},gp);
-    
-    
-    [fitness_new(i),gp] = feval(gp.fitness.fitfun,evalstr,gp);
-    %gp2.fitness.values(i) = fitness;
-    
-end
 
 %sum(gp2.fitness.values < gp.fitness.values)
 
@@ -162,7 +160,7 @@ temp_comparison = fitness_new < fitness;
 gp.pop(temp_comparison) = C(temp_comparison);
 gp.fitness.values(temp_comparison) = fitness(temp_comparison);
 
-gp.improv(gp.state.count) = ( sum(temp_comparison) )/length(idx_new);
+gp.improv(gp.state.count) = ( sum(temp_comparison) )/(length(idx_new)-1);
 
 %gp.improv(gp.state.count)
 
