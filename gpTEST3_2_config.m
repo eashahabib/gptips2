@@ -21,7 +21,7 @@ function gp = gpdemo1_config(gp)
 %run control
 gp.runcontrol.pop_size = 300;			
 gp.runcontrol.num_gen = 100;
-gp.runcontrol.runs = 2;
+gp.runcontrol.runs = 1;
 gp.runcontrol.verbose = 25;  
 gp.runcontrol.timeout = 10*60*60;            %seconds
 gp.fitness.terminate = true;
@@ -70,7 +70,7 @@ gp.nodes.const.p_ERC = 0.3;
 gp.nodes.const.p_int = 0.1;
 
 %maximum depth of trees 
-gp.treedef.max_depth = 4;
+gp.treedef.max_depth = 10;
 
 %maximum depth of sub-trees created by mutation operator
 gp.treedef.max_mutate_depth = 2;
